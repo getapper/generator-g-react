@@ -3,7 +3,6 @@ import {
   fork,
   take,
   put,
-  select,
   delay,
   race,
 } from "redux-saga/effects";
@@ -17,7 +16,7 @@ function* ajaxTask(
   requestAction: ApiRequestAction,
   cancelToken: CancelTokenSource
 ): any {
-  const { type, payload, retry } = requestAction;
+  const { type, payload } = requestAction;
   const { params, options } = payload;
   const { path, method, body, query } = params;
   const api = type.replace("/request", "");
@@ -91,7 +90,7 @@ function* ajaxTask(
   }
 }
 
-export function* requestSaga() {
+export function* ajaxRequestSaga() {
   yield takeEvery(
     (action: Action) => /^apis\/(.*?)\/request$/.test(action.type),
     function* (requestAction: ApiRequestAction) {

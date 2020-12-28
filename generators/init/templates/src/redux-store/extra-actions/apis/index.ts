@@ -29,6 +29,7 @@ export interface ApiRequestPayloadType {
   options?: ApiRequestPayloadBuilderOptions;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const apiRequestPayloadBuilder = (
   params: ApiRequestPayloadBuilderParams,
   options?: ApiRequestPayloadBuilderOptions
@@ -63,6 +64,7 @@ export interface ApiFailAction extends Action {
   payload: ApiFailData;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const apiActionBuilder = <ApiRequestParams, ApiResponseData>(
   api: string,
   prepare: PrepareAction<ApiRequestPayloadType>
@@ -70,7 +72,7 @@ const apiActionBuilder = <ApiRequestParams, ApiResponseData>(
   api,
   request: createAction(`${api}/request`, prepare) as ApiActionRequest<
     [ApiRequestParams, ApiRequestPayloadBuilderOptions?]
-  >,
+    >,
   success: createAction(
     `${api}/success`,
     (payload: ApiSuccessData<ApiResponseData>) => ({
