@@ -1,0 +1,158 @@
+version: 2.1 # use CircleCI 2.1
+
+orbs:
+  node: circleci/node@3.0.1
+  aws-s3: circleci/aws-s3@1.0.15
+  slack: circleci/slack@3.4.2
+
+jobs:
+  deps:
+    working_directory: ~/project # directory where steps will run
+    docker:
+      - image: 'circleci/node:12.13.0'
+    steps: # a collection of executable commands
+      - checkout # special step to check out source code to working directory
+      - node/install-packages
+      - persist_to_workspace:
+          root: ~/project
+          paths: .
+
+  build-staging:
+    working_directory: ~/project # directory where steps will run
+    docker:
+      - image: 'circleci/node:12.13.0'
+    steps: # a collection of executable commands
+      - checkout
+      - node/install-packages
+      - attach_workspace:
+          at: ~/project
+      - run:
+          name: build
+          command: npm run build:staging
+      - persist_to_workspace:
+          root: ~/project
+          paths: .
+
+  build-production:
+    working_directory: ~/project # directory where steps will run
+    docker:
+      - image: 'circleci/node:12.13.0'
+    steps: # a collection of executable commands
+      - checkout
+      - node/install-packages
+      - attach_workspace:
+          at: ~/project
+      - run:
+          name: build
+          command: npm run build:production
+      - persist_to_workspace:
+          root: ~/project
+          paths: .
+
+  deploy-staging:
+    working_directory: ~/project # directory where steps will run
+    docker:
+      - image: 'circleci/node:12.13.0'
+    steps: # a collection of executable commands
+      - checkout
+      - node/install-packages
+      - attach_workspace:
+          at: ~/project
+      - aws-s3/sync:
+          from: build
+          # @TODO: Replace with bucket name
+          to: 's3://bucket-staging/'
+          arguments: |
+            --acl public-read \
+            --cache-control "max-age=86400" \
+            --delete
+          overwrite: true
+      - slack/notify:
+          color: '#2db886'
+          # @TODO: Replace with project name
+          message: "[Project-Name Frontend] successfully deployed in Staging"
+
+  deploy-production:
+    working_directory: ~/project # directory where steps will run
+    docker:
+      - image: 'circleci/node:12.13.0'
+    steps: # a collection of executable commands
+      - checkout
+      - node/install-packages
+      - attach_workspace:
+          at: ~/project
+      - aws-s3/sync:
+          from: build
+          # @TODO: Replace with bucket name
+          to: 's3://bucket-production/'
+          arguments: |
+            --acl public-read \
+            --cache-control "max-age=86400" \
+            --delete
+          overwrite: true
+      - run:
+          name: "Invalidate CloudFront Cache"
+          # @TODO: Replace CLOUDFRONT_ID
+          command: |
+            aws cloudfront create-invalidation --distribution-id CLOUDFRONT_ID --paths "/*"
+      - slack/notify:
+          color: '#2db886'
+          # @TODO: Replace with project name
+          message: "[Project-Name Frontend] successfully deployed in Production"
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - deps:
+          filters:
+            branches:
+              ignore: master
+      - build-staging:
+          requires:
+            - deps
+          filters:
+            branches:
+              ignore: master
+  deploy-stage:
+    jobs:
+      - deps:
+          filters:
+            branches:
+              only: master
+      - build-staging:
+          requires:
+            - deps
+          filters:
+            branches:
+              only: master
+      - deploy-staging:
+          requires:
+            - build-staging
+          filters:
+            branches:
+              only: master
+  deploy-production:
+    jobs:
+      - deps:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v(0|[1-9]\d*).(0|[1-9]\d*)$/
+      - build-production:
+          requires:
+            - deps
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v(0|[1-9]\d*).(0|[1-9]\d*)$/
+      - deploy-production:
+          requires:
+            - build-production
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v(0|[1-9]\d*).(0|[1-9]\d*)$/
