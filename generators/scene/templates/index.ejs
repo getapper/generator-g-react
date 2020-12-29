@@ -1,0 +1,14 @@
+import React, { memo } from "react";
+<% if (useHooks) { %>import use<%= sceneName %> from "./index.hooks";
+
+<% } %>interface <%= sceneName %>Props {}
+
+const <%= sceneName %>: React.FC = ({}: <%= sceneName %>Props) => {
+<% if (useHooks) { %>  const {<% if (withStyles) { %> styles, classes <% } %>} = use<%= sceneName %>();
+
+<% } %>  return (
+    <div />
+  );
+};
+
+export default memo(<%= sceneName %>);

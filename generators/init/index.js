@@ -37,9 +37,6 @@ module.exports = class extends Generator {
 
     const pkgJson = {
       devDependencies: {
-        "@types/classnames": "2.2.10",
-        "@types/react-redux": "7.1.9",
-        "@types/react-router-dom": "^5.1.5",
         "env-cmd": "10.1.0",
         husky: "4.2.5",
         "lint-staged": "10.2.11",
@@ -47,7 +44,11 @@ module.exports = class extends Generator {
       },
       dependencies: {
         "@material-ui/core": "4.11.0",
+        "@material-ui/icons": "4.11.2",
         "@reduxjs/toolkit": "1.4.0",
+        "@types/classnames": "2.2.10",
+        "@types/react-redux": "7.1.9",
+        "@types/react-router-dom": "^5.1.5",
         axios: "0.19.2",
         classnames: "2.2.6",
         "connected-react-router": "6.8.0",

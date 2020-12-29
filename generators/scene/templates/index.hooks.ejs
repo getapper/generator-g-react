@@ -1,0 +1,22 @@
+<% if (withStyles) { %>import { useMemo } from "react";
+import { useTheme } from "@material-ui/core";
+import { createStyles, makeStyles } from "@material-ui/core/styles";
+import { Theme } from "@material-ui/core";
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({})
+);
+
+<% } %>const use<%= sceneName %> = () => {
+<% if (withStyles) { %>  const theme = useTheme();
+  const styles = useStyles(theme);
+  const classes = useMemo(() => ({}), [styles]);
+
+  return {
+    styles,
+    classes,
+  };
+<% } else { %>  return {};
+<% } %>};
+
+export {use<%= sceneName %> as default};
