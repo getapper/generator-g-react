@@ -18,7 +18,7 @@ export const selectors = {
   ...feedback.selectors,
 };
 
-export const sagas = {
-  ...ajax.sagas,
-  ...feedback.sagas,
-};
+export const sagas = [
+  ...Object.values(ajax.sagas),
+  ...Object.values(feedback.sagas),
+];

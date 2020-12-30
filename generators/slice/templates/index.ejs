@@ -1,0 +1,14 @@
+import { createSlice } from "@reduxjs/toolkit";
+import * as selectors from "./selectors";
+import { <%= pCsliceName %>State } from "./interfaces";
+<% if (useSagas) { %>import * as sagas from "./sagas";
+<% } %>
+const initialState: <%= pCsliceName %>State = {};
+
+export const <%= sliceName %>Store = createSlice({
+  name: "<%= sliceName %>",
+  initialState,
+  reducers: {},
+});
+
+export { selectors<% if (useSagas) { %>, sagas<% } %> };
