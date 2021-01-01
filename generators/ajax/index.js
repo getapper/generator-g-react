@@ -184,7 +184,7 @@ module.exports = class extends Generator {
         "redux-store",
         "extra-actions",
         "apis",
-        "index.ts"
+        "index.tsx"
       ),
       content
     );

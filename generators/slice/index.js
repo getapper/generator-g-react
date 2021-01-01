@@ -42,7 +42,7 @@ module.exports = class extends Generator {
     const pCsliceName = pascalCase(sliceName);
 
     /**
-     * Slice/index.ts file
+     * Slice/index.tsx file
      */
 
     this.fs.copyTpl(
@@ -56,7 +56,7 @@ module.exports = class extends Generator {
     );
 
     /**
-     * Slice/interface/index.ts file
+     * Slice/interface/index.tsx file
      */
 
     this.fs.copyTpl(
@@ -70,7 +70,7 @@ module.exports = class extends Generator {
     );
 
     /**
-     * Slice/selectors/index.ts file
+     * Slice/selectors/index.tsx file
      */
 
     this.fs.copyTpl(
@@ -85,7 +85,7 @@ module.exports = class extends Generator {
     );
 
     /**
-     * Slice/sagas/index.ts file
+     * Slice/sagas/index.tsx file
      */
 
     if (useSagas) {
@@ -102,7 +102,7 @@ module.exports = class extends Generator {
 
     this.log(
       yosay(
-        "Don't forget to add the new slice to your redux-store/slices/index.ts file!"
+        "Don't forget to add the new slice to your redux-store/slices/index.tsx file!"
       )
     );
   }

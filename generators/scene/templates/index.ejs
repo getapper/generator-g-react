@@ -3,7 +3,7 @@ import React, { memo } from "react";
 
 <% } %>interface <%= sceneName %>Props {}
 
-const <%= sceneName %>: React.FC = ({}: <%= sceneName %>Props) => {
+const <%= sceneName %> = ({}: <%= sceneName %>Props) => {
 <% if (useHooks) { %>  const {<% if (withStyles) { %> styles, classes <% } %>} = use<%= sceneName %>();
 
 <% } %>  return (

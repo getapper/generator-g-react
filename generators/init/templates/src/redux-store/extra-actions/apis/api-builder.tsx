@@ -1,6 +1,7 @@
 import {
   ActionCreatorWithPreparedPayload,
   createAction,
+  PayloadActionCreator,
   PrepareAction,
 } from "@reduxjs/toolkit";
 import { Action } from "redux";
@@ -51,36 +52,30 @@ interface ApiSuccessData<T> {
   data: T;
 }
 
-export interface ApiSuccessAction<T> extends Action {
-  payload: ApiSuccessData<T>;
-}
-
-interface ApiFailData {
-  status: number;
-  message: string;
-}
+export type ApiSuccessAction<T> = PayloadActionCreator<ApiSuccessData<T>>
 
 export interface ApiFailAction extends Action {
-  payload: ApiFailData;
+  payload: {
+    status: number;
+    message: string;
+  };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const apiActionBuilder = <ApiRequestParams, ApiResponseData>(
+export const apiActionBuilder = <ApiRequestParams, ApiResponseAction>(
   api: string,
   prepare: PrepareAction<ApiRequestPayloadType>
 ) => ({
   api,
-  request: createAction(`${api}/request`, prepare) as ApiActionRequest<
-    [ApiRequestParams, ApiRequestPayloadBuilderOptions?]
-    >,
+  request: createAction(`${api}/request`, prepare),
   success: createAction(
     `${api}/success`,
-    (payload: ApiSuccessData<ApiResponseData>) => ({
+    (payload) => ({
       payload,
     })
-  ),
-  fail: createAction(`${api}/fail`, (payload: ApiFailData) => ({
+  ) as unknown as ApiResponseAction,
+  fail: createAction(`${api}/fail`, (payload) => ({
     payload,
-  })),
+  })) as unknown as ApiFailAction,
   cancel: createAction(`${api}/cancel`),
 });

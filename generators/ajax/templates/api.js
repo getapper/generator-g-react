@@ -1,10 +1,16 @@
-module.exports = (apiNamePC, apiActionRoute, routePath, methodUC, urlParams) => `import {apiActionBuilder, apiRequestPayloadBuilder, ApiRequestPayloadBuilderOptions, HttpMethod} from '../builder'
+module.exports = (apiNamePC, apiActionRoute, routePath, methodUC, urlParams) => `import {
+  apiActionBuilder,
+  apiRequestPayloadBuilder,
+  ApiRequestPayloadBuilderOptions,
+  ApiSuccessAction,
+  HttpMethod
+} from '../api-builder'
 
 export interface ${apiNamePC}Params {${urlParams ? urlParams.map(p => `\n  ${p}: string,`).join('\n') : ''}}
 export interface ${apiNamePC}ResponseData {}
 export default apiActionBuilder<
   ${apiNamePC}Params,
-  ${apiNamePC}ResponseData
+  ApiSuccessAction<${apiNamePC}ResponseData>
 >(
   "${apiActionRoute}",
   (

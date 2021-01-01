@@ -1,7 +1,7 @@
 import React, {memo, ReactNode} from "react";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import store, { persistor, history } from "redux-store";
+import store, { persistor, history } from "generators/init/templates/src/redux-store";
 import { ConnectedRouter } from "connected-react-router";
 
 /**
