@@ -81,16 +81,15 @@ module.exports = class extends Generator {
      * TSCONFIG JSON
      */
 
-    const tsConfigJson = {
-      compilerOptions: {
-        baseUrl: "src"
-      }
-    };
+    const tsConfigJson = this.fs.readJSON(
+      this.destinationPath("tsconfig.json")
+    );
+    tsConfigJson.compilerOptions.baseUrl = "src";
+    tsConfigJson.compilerOptions.strict = false;
+    tsConfigJson.extends = "./custom-tsconfig.json";
 
     // Extend or create tsconfig.json file in destination path
-    this.fs.extendJSON(this.destinationPath("tsconfig.json"), tsConfigJson);
-
-    this.fs.copy(this.templatePath("."), this.destinationPath("."));
+    this.fs.write(this.destinationPath("tsconfig.json"), tsConfigJson);
 
     /**
      * GIT_IGNORE
@@ -106,6 +105,11 @@ module.exports = class extends Generator {
     } else {
       fs.writeFileSync(gitignoreFile, content);
     }
+
+    /**
+     * Copy all other files
+     */
+    this.fs.copy(this.templatePath("."), this.destinationPath("."));
   }
 
   install() {

@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 <% if (useHooks) { %>import use<%= componentName %> from "./index.hooks";
 
-<% } %>interface <%= componentName %>Props {}
+<% } %>type <%= componentName %>Props = {}
 
 const <%= componentName %> = ({}: <%= componentName %>Props) => {
 <% if (useHooks) { %>  const {<% if (withStyles) { %> styles, classes <% } %>} = use<%= componentName %>();
