@@ -4,7 +4,10 @@ import React, { memo } from "react";
 <% } %>type <%= sceneName %>Props = {}
 
 const <%= sceneName %> = ({}: <%= sceneName %>Props) => {
-<% if (useHooks) { %>  const {<% if (withStyles) { %> styles, classes <% } %>} = use<%= sceneName %>();
+<% if (useHooks) { %>  const {<% if (withStyles) { %>
+    styles,
+    classes,
+  <% } %>} = use<%= sceneName %>();
 
 <% } %>  return (
     <div />

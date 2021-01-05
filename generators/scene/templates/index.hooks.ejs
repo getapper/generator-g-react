@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme: Theme) =>
 <% } %>const use<%= sceneName %> = () => {
 <% if (withStyles) { %>  const theme = useTheme();
   const styles = useStyles(theme);
-  const classes = useMemo(() => ({}), [styles]);
+  const classes = useMemo(() => ({}), []);
 
   return {
     styles,

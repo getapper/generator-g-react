@@ -1,0 +1,15 @@
+{
+  "extends": ["react-app"],
+  "rules": {
+    "no-empty-pattern": "off",
+    "no-loop-func": "off"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.ts?(x)"],
+      "rules": {
+        "@typescript-eslint/no-unused-vars": "off"
+      }
+    }
+  ]
+}

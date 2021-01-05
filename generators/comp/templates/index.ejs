@@ -4,7 +4,10 @@ import React, { memo } from "react";
 <% } %>type <%= componentName %>Props = {}
 
 const <%= componentName %> = ({}: <%= componentName %>Props) => {
-<% if (useHooks) { %>  const {<% if (withStyles) { %> styles, classes <% } %>} = use<%= componentName %>();
+<% if (useHooks) { %>  const {<% if (withStyles) { %>
+    styles,
+    classes,
+  <% } %>} = use<%= componentName %>();
 
 <% } %>  return (
     <div />
