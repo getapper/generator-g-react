@@ -6,7 +6,7 @@ module.exports = (apiNamePC, apiActionRoute, routePath, methodUC, urlParams) => 
   HttpMethod
 } from '../api-builder'
 
-export interface ${apiNamePC}Params {${urlParams ? urlParams.map(p => `\n  ${p}: string,`).join('\n') : ''}}
+export interface ${apiNamePC}Params {${urlParams ? urlParams.map(p => `\n  ${p}: string,`).join('\n') + '\n' : ''}}
 export interface ${apiNamePC}ResponseData {}
 export default apiActionBuilder<
   ${apiNamePC}Params,

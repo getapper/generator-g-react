@@ -61,13 +61,14 @@ export interface ApiFailAction extends Action {
   };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const apiActionBuilder = <ApiRequestParams, ApiResponseAction>(
   api: string,
   prepare: PrepareAction<ApiRequestPayloadType>
 ) => ({
   api,
-  request: createAction(`${api}/request`, prepare),
+  request: createAction(`${api}/request`, prepare) as ApiActionRequest<
+    [ApiRequestParams, ApiRequestPayloadBuilderOptions?]
+  >,
   success: createAction(
     `${api}/success`,
     (payload) => ({
