@@ -7,6 +7,7 @@ const <%= componentName %> = ({}: <%= componentName %>Props) => {
 <% if (useHooks) { %>  const {<% if (withStyles) { %>
     styles,
     classes,
+    atomicStyles,
   <% } %>} = use<%= componentName %>();
 
 <% } %>  return (
