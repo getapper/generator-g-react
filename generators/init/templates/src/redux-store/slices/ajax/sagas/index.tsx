@@ -8,7 +8,7 @@ import {
 } from "redux-saga/effects";
 import { Action } from "redux";
 import axios, { CancelTokenSource, AxiosError } from "axios";
-import { ApiRequestAction } from "generators/init/templates/src/redux-store/extra-actions/apis/api-builder";
+import { ApiRequestAction } from "redux-store/extra-actions/apis/api-builder";
 import { apiBaseUrl } from "config";
 import { actions } from "redux-store/slices";
 
