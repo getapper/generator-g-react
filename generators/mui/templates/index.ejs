@@ -1,0 +1,19 @@
+import React, { memo } from "react";
+import { <%= muiComponentName %>, <%= muiComponentName %>Props } from "@material-ui/core";
+import use<%= componentName %> from "./index.hooks";
+
+type <%= componentName %>Props = {} & <%= muiComponentName %>Props;
+
+const <%= componentName %> = ({}: <%= componentName %>Props) => {
+  const {
+    styles,
+    classes,
+    atomicStyles,
+  } = use<%= componentName %>();
+
+  return (
+    <<%= muiComponentName %> />
+  );
+};
+
+export default memo(<%= componentName %>);
