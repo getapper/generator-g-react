@@ -9,7 +9,7 @@ import { createBrowserHistory } from "history";
 import { actions, reducers, sagas, selectors } from "./slices";
 
 const rootSaga = function* () {
-  yield all(sagas);
+  yield all(sagas.map((s) => s()));
 };
 const sagaMiddleware = createSagaMiddleware();
 
