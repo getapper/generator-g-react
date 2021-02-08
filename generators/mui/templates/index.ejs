@@ -4,15 +4,11 @@ import use<%= componentName %> from "./index.hooks";
 
 type <%= componentName %>Props = {} & <%= muiComponentName %>Props;
 
-const <%= componentName %> = ({}: <%= componentName %>Props) => {
-  const {
-    styles,
-    classes,
-    atomicStyles,
-  } = use<%= componentName %>();
+const <%= componentName %> = ({ ...props }: <%= componentName %>Props) => {
+  const { styles, classes, atomicStyles } = use<%= componentName %>();
 
   return (
-    <<%= muiComponentName %> />
+    <<%= muiComponentName %> {...props} />
   );
 };
 
