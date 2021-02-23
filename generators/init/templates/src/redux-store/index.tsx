@@ -4,7 +4,7 @@ import createSagaMiddleware from "redux-saga";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { all } from "redux-saga/effects";
-import { connectRouter } from "connected-react-router";
+import { connectRouter, routerMiddleware } from "connected-react-router";
 import { createBrowserHistory } from "history";
 import { actions, reducers, sagas, selectors } from "./slices";
 
@@ -29,7 +29,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
   reducer: persistedReducer,
-  middleware: [sagaMiddleware],
+  middleware: [sagaMiddleware, routerMiddleware(history)],
 });
 const persistor = persistStore(store);
 sagaMiddleware.run(rootSaga);

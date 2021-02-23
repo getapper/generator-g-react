@@ -1,6 +1,6 @@
 import React, {memo} from "react";
 import { MuiThemeProvider } from "@material-ui/core";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import AppSnackbar from "components/AppSnackbar";
 import useAppHooks from "./index.hooks";
 
@@ -9,13 +9,11 @@ const App: React.FC = () => {
 
   return (
     <MuiThemeProvider theme={theme}>
-      <Router>
-        <Switch>
-          <Route path="/">
-            <div>Test message</div>
-          </Route>
-        </Switch>
-      </Router>
+      <Switch>
+        <Route path="/">
+          <div>Test message</div>
+        </Route>
+      </Switch>
       <AppSnackbar />
     </MuiThemeProvider>
   );
