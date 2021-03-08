@@ -23,60 +23,67 @@ interface ApiRequestPayloadBuilderParams {
 
 export interface ApiRequestPayloadBuilderOptions {
   requestDelay: number;
+  absolutePath?: boolean;
 }
 
-export interface ApiRequestPayloadType {
+export interface ApiRequestPayloadType<T> {
   params: ApiRequestPayloadBuilderParams;
   options?: ApiRequestPayloadBuilderOptions;
+  prepareParams?: T;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const apiRequestPayloadBuilder = (
-  params: ApiRequestPayloadBuilderParams,
-  options?: ApiRequestPayloadBuilderOptions
-): ApiRequestPayloadType => ({
+export const apiRequestPayloadBuilder: <T>(
+  ApiRequestPayloadBuilderParams,
+  ApiRequestPayloadBuilderOptions,
+  prepareParams?: T,
+) => ApiRequestPayloadType<T> = (params, options?, prepareParams?) => ({
   params,
   options,
+  prepareParams,
 });
 
-export interface ApiRequestAction extends Action<string> {
-  payload: ApiRequestPayloadType;
+export interface ApiRequestAction<T> extends Action<string> {
+  payload: ApiRequestPayloadType<T>;
   retry?: boolean;
 }
 
 interface ApiActionRequest<Args extends unknown[]>
-  extends ActionCreatorWithPreparedPayload<Args, ApiRequestPayloadType> {}
+  extends ActionCreatorWithPreparedPayload<
+    Args,
+    ApiRequestPayloadType<Args[0]>
+    > {}
 
-interface ApiSuccessData<T> {
+interface ApiSuccessData<T, U> {
   status: number;
   data: T;
+  prepareParams: U;
 }
 
-export type ApiSuccessAction<T> = PayloadActionCreator<ApiSuccessData<T>>
-
-export interface ApiFailAction extends Action {
-  payload: {
-    status: number;
-    message: string;
-  };
+export interface ApiFailData {
+  status: number;
+  message: string;
 }
+
+export type ApiSuccessAction<T, U = any> = PayloadActionCreator<
+  ApiSuccessData<T, U>
+  >;
+
+export type ApiFailAction = PayloadActionCreator<ApiFailData>;
 
 export const apiActionBuilder = <ApiRequestParams, ApiResponseAction>(
   api: string,
-  prepare: PrepareAction<ApiRequestPayloadType>
+  prepare: PrepareAction<ApiRequestPayloadType<ApiRequestParams>>,
 ) => ({
   api,
   request: createAction(`${api}/request`, prepare) as ApiActionRequest<
     [ApiRequestParams, ApiRequestPayloadBuilderOptions?]
-  >,
-  success: createAction(
-    `${api}/success`,
-    (payload) => ({
-      payload,
-    })
-  ) as unknown as ApiResponseAction,
-  fail: createAction(`${api}/fail`, (payload) => ({
+    >,
+  success: (createAction(`${api}/success`, (payload) => ({
     payload,
-  })) as unknown as ApiFailAction,
+  })) as unknown) as ApiResponseAction,
+  fail: (createAction(`${api}/fail`, (payload) => ({
+    payload,
+  })) as unknown) as ApiFailAction,
   cancel: createAction(`${api}/cancel`),
 });

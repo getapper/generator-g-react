@@ -22,7 +22,8 @@ export default apiActionBuilder<
         path: ${routePath},
         method: HttpMethod.${methodUC},
       },
-      options
+      options,
+      params,
     ),
   })
 );

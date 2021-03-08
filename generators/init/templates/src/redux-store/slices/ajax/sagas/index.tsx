@@ -1,11 +1,4 @@
-import {
-  takeEvery,
-  fork,
-  take,
-  put,
-  delay,
-  race,
-} from "redux-saga/effects";
+import { takeEvery, fork, take, put, delay, race } from "redux-saga/effects";
 import { Action } from "redux";
 import axios, { CancelTokenSource, AxiosError } from "axios";
 import { ApiRequestAction } from "redux-store/extra-actions/apis/api-builder";
@@ -13,11 +6,11 @@ import { apiBaseUrl } from "config";
 import { actions } from "redux-store/slices";
 
 function* ajaxTask(
-  requestAction: ApiRequestAction,
-  cancelToken: CancelTokenSource
+  requestAction: ApiRequestAction<any>,
+  cancelToken: CancelTokenSource,
 ): any {
   const { type, payload } = requestAction;
-  const { params, options } = payload;
+  const { params, options, prepareParams } = payload;
   const { path, method, body, query } = params;
   const api = type.replace("/request", "");
 
@@ -25,7 +18,7 @@ function* ajaxTask(
     actions.setApiLoading({
       api,
       isLoading: true,
-    })
+    }),
   );
 
   try {
@@ -41,7 +34,7 @@ function* ajaxTask(
 
     const { response } = yield race({
       response: axios({
-        url: `${apiBaseUrl()}${path}`,
+        url: options?.absolutePath ? path : `${apiBaseUrl()}${path}`,
         method,
         data: body,
         params: query,
@@ -56,13 +49,14 @@ function* ajaxTask(
         payload: {
           status: response?.status,
           data: response?.data,
+          prepareParams,
         },
       });
       yield put(
         actions.setApiLoading({
           api,
           isLoading: false,
-        })
+        }),
       );
     } else {
       cancelToken.cancel();
@@ -84,7 +78,7 @@ function* ajaxTask(
         actions.setApiLoading({
           api,
           isLoading: false,
-        })
+        }),
       );
     }
   }
@@ -93,7 +87,7 @@ function* ajaxTask(
 export function* ajaxRequestSaga() {
   yield takeEvery(
     (action: Action) => /^apis\/(.*?)\/request$/.test(action.type),
-    function* (requestAction: ApiRequestAction) {
+    function* (requestAction: ApiRequestAction<any>) {
       try {
         const { type } = requestAction;
         const api = type.replace("/request", "");
@@ -121,6 +115,6 @@ export function* ajaxRequestSaga() {
       } catch (e) {
         console.error(e);
       }
-    }
+    },
   );
 }
