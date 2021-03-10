@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import * as selectors from "./selectors";
 import { <%= pCsliceName %>State } from "./interfaces";
+import * as extraActions from "../../extra-actions";
 <% if (useSagas) { %>import * as sagas from "./sagas";
 <% } %>
 const initialState: <%= pCsliceName %>State = {};
