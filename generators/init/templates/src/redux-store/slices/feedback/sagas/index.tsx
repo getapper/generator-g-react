@@ -35,7 +35,7 @@ export function* ajaxSuccessFeedbackSaga() {
 export function* ajaxFailFeedbackSaga() {
   yield takeEvery(
     (action: Action) => /^apis\/(.*?)\/fail$/.test(action.type),
-    function* (action: ApiFailAction) {
+    function* (action: any) {
       switch (action.type) {
         default:
           yield put(
