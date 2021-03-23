@@ -1,1 +1,7 @@
-export default class <%= modelName %> {}
+export interface I<%= modelName %> {}
+
+export default class <%= modelName %> implements I<%= modelName %> {
+  constructor(obj: I<%= modelName %>) {
+    Object.assign(this, obj);
+  }
+}
