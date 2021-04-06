@@ -1,0 +1,20 @@
+import React, { memo } from "react";
+import use<%= formName %> from "./index.hooks";
+
+type <%= formName %>Props = {}
+
+const <%= formName %> = ({}: <%= formName %>Props) => {
+  const {
+    styles,
+    classes,
+    atomicStyles,
+    register,
+    onSubmit,
+  } = use<%= formName %>();
+
+  return (
+    <form onSubmit={onSubmit}></form>
+  );
+};
+
+export default memo(<%= formName %>);

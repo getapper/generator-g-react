@@ -1,0 +1,38 @@
+import { useMemo } from "react";
+import { useTheme } from "@material-ui/core";
+import { createStyles, makeStyles } from "@material-ui/core/styles";
+import { Theme } from "@material-ui/core";
+import { useAtomicStyles } from "styles";
+import { useForm } from "react-hook-form";
+import { actions, selectors } from "redux-store";
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({})
+);
+
+const use<%= formName %> = () => {
+  const theme = useTheme();
+  const styles = useStyles(theme);
+  const classes = useMemo(() => ({}), []);
+  const atomicStyles = useAtomicStyles();
+  const { register, handleSubmit } = useForm<{}>();
+  const dispatch = useDispatch();
+
+  const onSubmit = useMemo(
+    () =>
+      handleSubmit(({}) => {
+
+      }),
+    [handleSubmit],
+  );
+
+  return {
+    styles,
+    classes,
+    atomicStyles,
+    register,
+    onSubmit,
+  };
+};
+
+export {use<%= formName %> as default};

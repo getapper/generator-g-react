@@ -53,6 +53,7 @@ module.exports = class extends Generator {
         classnames: "2.2.6",
         "connected-react-router": "6.8.0",
         history: "4.10.1",
+        "react-hook-form": "6.15.4",
         "react-redux": "7.2.0",
         "react-router-dom": "5.2.0",
         "redux-persist": "6.0.0",
