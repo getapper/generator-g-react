@@ -84,7 +84,7 @@ module.exports = class extends Generator {
      * /src/components/index.tsx export file
      */
 
-    const content = `export { default as ${this.answers.componentName} } from './${this.answers.componentName};'\n`;
+    const content = `export { default as ${this.answers.componentName} } from './${this.answers.componentName}';\n`;
 
     fs.appendFileSync(
       path.join(this.destinationRoot(), "src", "components", "index.tsx"),
