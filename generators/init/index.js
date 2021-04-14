@@ -43,6 +43,7 @@ module.exports = class extends Generator {
         prettier: "2.0.5"
       },
       dependencies: {
+        "@hookform/resolvers": "1.3.5",
         "@material-ui/core": "4.11.0",
         "@material-ui/icons": "4.11.2",
         "@reduxjs/toolkit": "1.4.0",
@@ -57,7 +58,8 @@ module.exports = class extends Generator {
         "react-redux": "7.2.0",
         "react-router-dom": "5.2.0",
         "redux-persist": "6.0.0",
-        "redux-saga": "1.1.3"
+        "redux-saga": "1.1.3",
+        yup: "0.32.9"
       },
       scripts: {
         "start:backend:locale":

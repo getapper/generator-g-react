@@ -68,7 +68,7 @@ module.exports = class extends Generator {
      * /src/forms/index.tsx export file
      */
 
-    const content = `export {default as ${this.answers.formName}} from './${this.answers.formName}'\n`;
+    const content = `export { default as ${this.answers.formName} } from './${this.answers.formName};'\n`;
 
     fs.appendFileSync(
       path.join(this.destinationRoot(), "src", "components", "index.tsx"),
