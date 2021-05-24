@@ -22,7 +22,7 @@ interface ApiRequestPayloadBuilderParams {
 }
 
 export interface ApiRequestPayloadBuilderOptions {
-  requestDelay: number;
+  requestDelay?: number;
   absolutePath?: boolean;
 }
 

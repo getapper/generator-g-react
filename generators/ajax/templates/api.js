@@ -10,14 +10,14 @@ export interface ${apiNamePC}Params {${urlParams ? urlParams.map(p => `\n  ${p}:
 export interface ${apiNamePC}ResponseData {}
 export default apiActionBuilder<
   ${apiNamePC}Params,
-  ApiSuccessAction<${apiNamePC}ResponseData>
+  ApiSuccessAction<${apiNamePC}ResponseData, ${apiNamePC}Params>
 >(
   "${apiActionRoute}",
   (
     params: ${apiNamePC}Params,
     options?: ApiRequestPayloadBuilderOptions
   ) => ({
-    payload: apiRequestPayloadBuilder(
+    payload: apiRequestPayloadBuilder<${apiNamePC}Params>(
       {
         path: ${routePath},
         method: HttpMethod.${methodUC},
