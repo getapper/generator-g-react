@@ -78,13 +78,45 @@ function* ajaxTask(
     const axiosError = e as AxiosError;
     if (!axios.isCancel(axiosError)) {
       const status = axiosError?.response?.status || 500;
+      /**
+       * If the ajax status code is Unauthorized
+       * If this is not already a retry action after refreshing token
+       * Then, try to refresh tokens and retry the ajax call
+       */
+      if (status !== 401 && !retry) {
+        const state = yield select();
+        const refreshToken = selectors.getCognitoRefreshToken(state);
+        if (refreshToken) {
+          yield put(actions.cognitoRefreshTokens());
+          const refreshResultAction = yield take([
+            actions.cognitoSetTokens.type,
+            actions.clearSession.type,
+          ]);
+          if (refreshResultAction.type === actions.cognitoSetTokens.type) {
+            yield ajaxTask(
+              {
+                ...requestAction,
+                retry: true,
+              },
+              cancelToken,
+            );
+            return;
+          }
+        }
+      }
       const message: string =
-        axiosError?.response?.data?.message || axiosError.message;
+        status === 401
+          ? "Sessione scaduta"
+          : axiosError?.response?.data?.message ?? axiosError.message;
       yield put({
         type: `${api}/fail`,
         payload: {
           status,
           message,
+          showFeedbackOnError:
+            typeof options?.showFeedbackOnError !== "undefined"
+              ? options?.showFeedbackOnError
+              : true,
         },
       });
       yield put(

@@ -37,7 +37,8 @@ module.exports = class extends Generator {
      */
     const pkgJson = {
       dependencies: {
-        "amazon-cognito-identity-js": "4.5.10"
+        "amazon-cognito-identity-js": "4.5.10",
+        "aws-amplify": "3.4.0"
       }
     };
     this.fs.extendJSON(this.destinationPath("package.json"), pkgJson);
@@ -81,7 +82,7 @@ export function* awsErrorFeedbackSaga() {
      * /src/components/index.tsx export file
      */
 
-    const content2 = `export { default as UserPoolManager } from "./UserPoolManager";\n`;
+    const content2 = `export * from "./UserPoolManager";\n`;
 
     fs.appendFileSync(
       path.join(this.destinationRoot(), "src", "models", "index.tsx"),

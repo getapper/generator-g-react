@@ -20,7 +20,7 @@ type <%= formName %>Data = {
   // name: string;
 };
 
-const use<%= formName %> = () => {
+export const use<%= formName %> = () => {
   const theme = useTheme();
   const styles = useStyles(theme);
   const classes = useMemo(() => ({}), []);
@@ -46,5 +46,3 @@ const use<%= formName %> = () => {
     onSubmit,
   };
 };
-
-export {use<%= formName %> as default};

@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({})
 );
 
-const use<%= componentName %> = () => {
+export const use<%= componentName %> = () => {
   const theme = useTheme();
   const styles = useStyles(theme);
   const classes = useMemo(() => ({}), []);
@@ -20,5 +20,3 @@ const use<%= componentName %> = () => {
     atomicStyles,
   };
 };
-
-export {use<%= componentName %> as default};

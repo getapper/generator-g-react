@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const useAppTextField = ({ InputProps }) => {
+export const useAppTextField = ({ InputProps }) => {
   const theme = useTheme();
   const styles = useStyles(theme);
   const classes = useMemo(
@@ -38,5 +38,3 @@ const useAppTextField = ({ InputProps }) => {
     InputPropsCombined,
   };
 };
-
-export { useAppTextField as default };

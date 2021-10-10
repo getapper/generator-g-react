@@ -1,15 +1,10 @@
 import {
-  AuthenticationDetails,
   CognitoUserPool,
-  CognitoUserAttribute,
   CognitoUser,
-  ISignUpResult,
   CognitoUserSession,
   CognitoRefreshToken,
 } from "amazon-cognito-identity-js";
-import { promisify } from "util";
-
-export interface CognitoSignUpResult extends ISignUpResult {}
+import Amplify, { Auth } from "aws-amplify";
 
 export interface CognitoTokens {
   idToken: string;
@@ -19,251 +14,95 @@ export interface CognitoTokens {
 
 export default class UserPoolManager {
   clientId: string;
-  authDomain: string;
-  redirectUri: string;
   userPool: CognitoUserPool;
   attributesList: string[];
-  region: string;
-  pems: any;
-  iss: string;
+  user: CognitoUser;
 
   constructor(
     userPoolId: string,
     clientId: string,
     attributesList: string[] = [],
-    authDomain?: string,
-    redirectUri?: string,
-    region?: string,
-    accessKeyId?,
-    secretAccessKey?,
   ) {
+    Amplify.configure({
+      userPoolId,
+      userPoolWebClientId: clientId,
+    });
     this.userPool = new CognitoUserPool({
       UserPoolId: userPoolId,
       ClientId: clientId,
     });
     this.clientId = clientId;
-    this.authDomain = authDomain;
-    this.redirectUri = redirectUri;
     this.attributesList = attributesList;
-    this.region = region;
+    this.user = this.userPool.getCurrentUser();
   }
 
   async signup(
     email: string,
     password: string,
-    values?: any,
-  ): Promise<CognitoSignUpResult> {
-    const attributes: CognitoUserAttribute[] = this.attributesList.map(
-      (a) =>
-        new CognitoUserAttribute({
-          Name: a,
-          Value: values[a],
-        }),
-    );
-
-    const signupPromise = promisify(this.userPool.signUp.bind(this.userPool));
-    return signupPromise(email, password, attributes, null);
+    attributes: any = {},
+  ): Promise<CognitoUser> {
+    const { user } = await Auth.signUp({
+      username: email,
+      password,
+      attributes,
+    });
+    return user;
   }
 
   async login(email: string, password: string): Promise<CognitoUserSession> {
-    const authenticationDetails: AuthenticationDetails = new AuthenticationDetails(
-      {
-        Username: email,
-        Password: password,
-      },
-    );
-
-    const cognitoUser: CognitoUser = new CognitoUser({
-      Username: email,
-      Pool: this.userPool,
-    });
-
-    return await new Promise((resolve, reject) => {
-      cognitoUser.authenticateUser(authenticationDetails, {
-        onSuccess: resolve,
-        onFailure: reject,
-        newPasswordRequired: () => {
-          cognitoUser.completeNewPasswordChallenge(password, [], {
-            onSuccess: resolve,
-            onFailure: reject,
-          });
-        },
-        mfaRequired() {
-          const e = new Error("MFA required to authenticate");
-          e["code"] = "MFARequired";
-          e["session"] = cognitoUser["Session"];
-          reject(e);
-          // resolve(cognitoUser);
-        },
-      });
-    });
+    const user = await Auth.signIn(email, password);
+    this.user = user;
+    if (
+      user.challengeName === "SMS_MFA" ||
+      user.challengeName === "SOFTWARE_TOKEN_MFA"
+    ) {
+      const e = new Error("MFA required");
+      e["code"] = "MFARequired";
+      throw e;
+    }
+    return user;
   }
-
-  /*
-  async getOAuth2TokensFromCode(code: string): Promise<CognitoTokens> {
-    return new Promise((resolve, reject) => {
-      request(
-        {
-          url: `https://${this.authDomain}/oauth2/token`,
-          method: "POST",
-          form: {
-            grant_type: "authorization_code",
-            code,
-            client_id: this.clientId,
-            redirect_uri: this.redirectUri,
-          },
-        },
-        (error, response, body) => {
-          if (error) {
-            return reject(error);
-          }
-          if (response.statusCode !== 200) {
-            return reject(
-              new Error(
-                "Getting oAuth2 tokens error: " +
-                  JSON.stringify(response?.body),
-              ),
-            );
-          }
-          const jsonBody = JSON.parse(body);
-
-          resolve({
-            idToken: jsonBody.id_token,
-            accessToken: jsonBody.access_token,
-            refreshToken: jsonBody.refresh_token,
-          });
-        },
-      );
-    });
-  }
-  */
 
   async recoveryPassword(email: string) {
-    const cognitoUser: CognitoUser = new CognitoUser({
-      Username: email,
-      Pool: this.userPool,
-    });
-
-    return await new Promise((resolve, reject) => {
-      cognitoUser.forgotPassword({
-        onSuccess: resolve,
-        onFailure: reject,
-      });
-    });
+    return await Auth.forgotPassword(email);
   }
 
-  /*
-  async resetPassword(
-    email: string,
-    verificationCode: string,
-    newPassword: string,
-  ) {
-    const cognitoUser: CognitoUser = new CognitoUser({
-      Username: email,
-      Pool: this.userPool,
-    });
-
-    return await new Promise((resolve, reject) => {
-      cognitoUser.confirmPassword(verificationCode, newPassword, {
-        onSuccess: resolve,
-        onFailure: reject,
-      });
-    });
-  }
-  */
-
-  async confirmAccount(email: string, code: string) {
-    const userData = {
-      Username: email,
-      Pool: this.userPool,
-    };
-
-    const cognitoUser = new CognitoUser(userData);
-    return new Promise((resolve, reject) => {
-      cognitoUser.confirmRegistration(code, true, function (err, result) {
-        if (err) {
-          return reject(err.message || JSON.stringify(err));
-        }
-        resolve(result);
-      });
-    });
+  async resetPassword(email: string, code: string, password: string) {
+    return await Auth.forgotPasswordSubmit(email, code, password);
   }
 
-  async refreshTokens(
-    idToken: string,
-    refreshToken: string,
-    email: string,
-  ): Promise<CognitoUserSession> {
-    const cognitoUser: CognitoUser = new CognitoUser({
-      Username: email,
-      Pool: this.userPool,
-    });
+  async confirmAccount(email: string, code: string): Promise<any> {
+    await Auth.confirmSignUp(email, code);
+  }
 
-    const cognitoRefreshToken = new CognitoRefreshToken({
+  async changePassword(oldPassword: string, newPassword: string): Promise<any> {
+    await Auth.changePassword(this.user, oldPassword, newPassword);
+  }
+
+  async setUserAttributes(attributes: object) {
+    const user = await Auth.currentAuthenticatedUser();
+    await Auth.updateUserAttributes(user, attributes);
+  }
+
+  async refreshTokens(refreshToken: string): Promise<CognitoUserSession> {
+    const cognitoUser: CognitoUser = await Auth.currentAuthenticatedUser();
+    const RefreshToken = new CognitoRefreshToken({
       RefreshToken: refreshToken,
     });
-
-    return new Promise((resolve, reject) => {
-      cognitoUser.refreshSession(
-        cognitoRefreshToken,
-        (err, session: CognitoUserSession) => {
-          if (err) {
-            return reject(err);
-          }
-          resolve(session);
-        },
-      );
-    });
-  }
-
-  /*
-  async verifyMFA(
-    cognitoUserSession: CognitoUserSession,
-    username: string,
-    verificationCode: string,
-  ): Promise<any> {
-    return await new Promise((resolve, reject) => {
-      const cognitoUser: CognitoUserCustom = new CognitoUser({
-        Username: username,
-        Pool: this.userPool,
-      });
-      cognitoUser.Session = cognitoUserSession;
-      cognitoUser.sendMFACode(verificationCode, {
-        onSuccess: resolve,
-        onFailure: reject,
-      });
-    });
-  }
-  */
-
-  /*
-  async changePassword(
-    email: string,
-    oldPassword: string,
-    newPassword: string,
-  ): Promise<void> {
-    const cognitoUser: CognitoUser = new CognitoUser({
-      Username: email,
-      Pool: this.userPool,
-    });
-    await new Promise((resolve, reject) => {
-      this.userPool.getCurrentUser().getSession((err) => {
+    return await new Promise((res, rej) => {
+      cognitoUser.refreshSession(RefreshToken, (err, session) => {
         if (err) {
-          return reject(err);
+          return rej(err);
         }
-        resolve();
+        res(session);
       });
     });
-    return await new Promise((resolve, reject) => {
-      this.userPool
-        .getCurrentUser()
-        .changePassword(oldPassword, newPassword, (err) => {
-          if (err) {
-            return reject(err);
-          }
-          resolve();
-        });
-    });
   }
-  */
+
+  async verifyMFACode(
+    code: string,
+    mfaType: "SMS_MFA" | "SOFTWARE_TOKEN_MFA" = "SMS_MFA",
+  ): Promise<CognitoUserSession> {
+    return await Auth.confirmSignIn(this.user, code, mfaType);
+  }
 }

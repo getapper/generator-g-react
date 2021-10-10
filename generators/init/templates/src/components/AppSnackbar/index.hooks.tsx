@@ -5,7 +5,7 @@ import {
   getFeedbackType,
 } from "redux-store/slices/feedback/selectors";
 
-const useAppSnackbar = () => {
+export const useAppSnackbar = () => {
   const open = useSelector(getFeedbackOpen);
   const type = useSelector(getFeedbackType);
   const message = useSelector(getFeedbackMessage);
@@ -16,5 +16,3 @@ const useAppSnackbar = () => {
     message,
   };
 };
-
-export default useAppSnackbar;

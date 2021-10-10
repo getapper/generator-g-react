@@ -1,14 +1,17 @@
 import { UserPoolManager } from "models";
-import { put, takeEvery, select, take } from "redux-saga/effects";
-import { actions, selectors } from "redux-store";
+import { put, select, take, fork } from "redux-saga/effects";
+import { actions, RootState, selectors } from "redux-store";
 import {
   CognitoAuthenticationStatus,
+  CognitoChangePasswordAction,
   CognitoConfirmSignUpCodeAction,
   CognitoMFACodeAction,
-  CognitoPhoneNumberSubmitAction,
+  CognitoRecoveryPasswordAction,
+  CognitoResetPasswordAction,
   CognitoSignInAction,
   CognitoSignUpAction,
 } from "../interfaces";
+import { push } from "connected-react-router";
 
 export function* cognitoManager() {
   const userPoolManager = new UserPoolManager(
@@ -24,26 +27,57 @@ export function* cognitoManager() {
       actions.cognitoSignIn,
       actions.cognitoConfirmSignUpCode,
       actions.cognitoMFACode,
+      actions.cognitoRefreshTokens,
+      actions.cognitoRecoveryPassword,
+      actions.cognitoResetPassword,
+      actions.cognitoChangePassword,
     ]);
     switch (action.type) {
       case actions.appStartup.type:
-        yield cognitoAppStartupSaga();
+        yield fork(cognitoAppStartupSaga);
         break;
       case actions.cognitoSignUp.type:
-        yield cognitoSignUpSaga(userPoolManager, action);
+        yield fork(cognitoSignUpSaga, userPoolManager, action);
         break;
       case actions.cognitoSignIn.type:
-        yield cognitoSignInCodeSaga(
+        yield fork(
+          cognitoSignInCodeSaga,
           userPoolManager,
           (action as CognitoSignInAction).payload.email,
           (action as CognitoSignInAction).payload.password,
         );
         break;
       case actions.cognitoConfirmSignUpCode.type:
-        yield cognitoConfirmSignUpCodeSaga(userPoolManager, action);
+        yield fork(cognitoConfirmSignUpCodeSaga, userPoolManager, action);
         break;
       case actions.cognitoMFACode.type:
-        yield cognitoMFACodeSaga(userPoolManager, action);
+        yield fork(cognitoMFACodeSaga, userPoolManager, action);
+        break;
+      case actions.cognitoRefreshTokens.type:
+        yield fork(cognitoRefreshTokensSaga, userPoolManager);
+        break;
+      case actions.cognitoRecoveryPassword.type:
+        yield fork(
+          cognitoRecoveryPasswordSaga,
+          userPoolManager,
+          (action as CognitoRecoveryPasswordAction).payload.email,
+        );
+        break;
+      case actions.cognitoResetPassword.type:
+        yield fork(
+          cognitoResetPasswordSaga,
+          userPoolManager,
+          (action as CognitoResetPasswordAction).payload.code,
+          (action as CognitoResetPasswordAction).payload.password,
+        );
+        break;
+      case actions.cognitoChangePassword.type:
+        yield fork(
+          cognitoChangePasswordSaga,
+          userPoolManager,
+          (action as CognitoChangePasswordAction).payload.oldPassword,
+          (action as CognitoChangePasswordAction).payload.newPassword,
+        );
         break;
     }
   }
@@ -62,7 +96,7 @@ function* cognitoAppStartupSaga() {
     if (resultAction.type === actions.getUsersMe.success.type) {
       isLogged = true;
     } else {
-      // Fail? Retry? Delete tokens? Offline mode?
+      yield put(actions.clearSession());
     }
   }
   if (isLogged) {
@@ -71,6 +105,7 @@ function* cognitoAppStartupSaga() {
     yield put(
       actions.cognitoSetAuthStatus(CognitoAuthenticationStatus.LoggedOut),
     );
+    yield put(actions.clearSession());
   }
 }
 
@@ -91,7 +126,29 @@ function* cognitoSignUpSaga(
       ),
     );
   } catch (e) {
+    yield put(
+      actions.cognitoSetAuthStatus(CognitoAuthenticationStatus.LoggedOut),
+    );
     yield put(actions.cognitoSetAwsError(e));
+  }
+}
+
+function* cognitoRefreshTokensSaga(userPoolManager: UserPoolManager) {
+  try {
+    const refreshToken = yield select(selectors.getCognitoRefreshToken);
+    const cognitoUserSession = yield userPoolManager.refreshTokens(
+      refreshToken,
+    );
+    yield put(
+      actions.cognitoSetTokens({
+        id: cognitoUserSession.idToken.jwtToken,
+        access: cognitoUserSession.accessToken.jwtToken,
+        refresh: cognitoUserSession.refreshToken.token,
+      }),
+    );
+  } catch (e) {
+    yield put(actions.clearSession());
+    yield put(push("/login/"));
   }
 }
 
@@ -175,5 +232,50 @@ function* cognitoMFACodeSaga(
     } else {
       yield put(actions.cognitoSetAwsError(e));
     }
+  }
+}
+
+function* cognitoRecoveryPasswordSaga(
+  userPoolManager: UserPoolManager,
+  email: string,
+) {
+  try {
+    yield userPoolManager.recoveryPassword(email);
+  } catch (e) {
+    console.error(e);
+    yield put(
+      actions.cognitoSetAuthStatus(CognitoAuthenticationStatus.LoggedOut),
+    );
+    yield put(actions.cognitoSetAwsError(e));
+  }
+}
+
+function* cognitoResetPasswordSaga(
+  userPoolManager: UserPoolManager,
+  code: string,
+  password: string,
+) {
+  try {
+    const state: RootState = yield select();
+    const email = selectors.getCognitoEmail(state);
+    yield userPoolManager.resetPassword(email, code, password);
+    yield put(actions.cognitoResetPasswordSuccess());
+  } catch (e) {
+    console.error(e);
+    yield put(actions.cognitoSetAwsError(e));
+  }
+}
+
+function* cognitoChangePasswordSaga(
+  userPoolManager: UserPoolManager,
+  oldPassword: string,
+  newPassword: string,
+) {
+  try {
+    yield userPoolManager.changePassword(oldPassword, newPassword);
+    yield put(actions.cognitoChangePasswordSuccess());
+  } catch (e) {
+    console.error(e);
+    yield put(actions.cognitoSetAwsError(e));
   }
 }

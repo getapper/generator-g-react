@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const useAppAlertBox = () => {
+export const useAppAlertBox = () => {
   const theme = useTheme();
   const styles = useStyles(theme);
 
@@ -33,5 +33,3 @@ const useAppAlertBox = () => {
     styles,
   };
 };
-
-export default useAppAlertBox;

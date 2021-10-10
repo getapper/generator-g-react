@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import useAppSelect from "./index.hooks";
+import { useAppSelect } from "./index.hooks";
 import {
   FormControl,
   FormControlProps,
@@ -24,7 +24,7 @@ export type AppSelectProps = {
   onChange?: any;
 } & FormControlProps;
 
-const AppSelect = ({
+export const AppSelect = memo(({
   control,
   options,
   label,
@@ -76,6 +76,4 @@ const AppSelect = ({
       render={({ onChange, value, name, ref }) => renderSelect(value, onChange)}
     />
   );
-};
-
-export default memo(AppSelect);
+});

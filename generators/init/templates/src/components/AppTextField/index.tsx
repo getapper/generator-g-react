@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import useAppTextField from "./index.hooks";
+import { useAppTextField } from "./index.hooks";
 import { TextFieldProps, TextField, Typography, Grid } from "@material-ui/core";
 import { Controller } from "react-hook-form";
 
@@ -8,7 +8,7 @@ export type AppTextFieldProps = {
   textFieldRef?: React.MutableRefObject<HTMLInputElement>;
 } & TextFieldProps;
 
-const AppTextField = ({
+export const AppTextField = memo(({
   control,
   InputProps,
   textFieldRef,
@@ -72,6 +72,4 @@ const AppTextField = ({
       />
     );
   }
-};
-
-export default memo(AppTextField);
+});

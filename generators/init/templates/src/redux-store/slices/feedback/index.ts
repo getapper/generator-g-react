@@ -2,9 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   FeedbackState,
   SetFeedbackAction,
-} from "./interfaces";
-import * as selectors from "./selectors";
-import * as sagas from "./sagas";
+} from "./feedback.interfaces";
+import * as selectors from "./feedback.selectors";
+import * as sagas from "./feedback.sagas";
 import { AlertTypes } from "components/AppAlertBox";
 
 export const feedbackStore = createSlice({

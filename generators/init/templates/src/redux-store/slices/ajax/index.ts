@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import * as selectors from "./selectors";
-import * as sagas from "./sagas";
+import * as selectors from "./ajax.selectors";
+import * as sagas from "./ajax.sagas";
 
 export interface SetApiLoadingAction {
   payload: {

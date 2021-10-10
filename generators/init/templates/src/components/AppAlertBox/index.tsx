@@ -1,6 +1,6 @@
 import React, { memo, ReactNode } from "react";
 import cn from "classnames";
-import useAppAlertBox from "./index.hooks";
+import { useAppAlertBox } from "./index.hooks";
 
 export enum AlertTypes {
   success,
@@ -14,7 +14,7 @@ interface AlertBoxProps {
   type: AlertTypes;
 }
 
-const AppAlertBox = ({
+export const AppAlertBox = memo(({
   containerClassName,
   children,
   type,
@@ -34,6 +34,4 @@ const AppAlertBox = ({
       {children}
     </div>
   );
-};
-
-export default memo(AppAlertBox);
+});

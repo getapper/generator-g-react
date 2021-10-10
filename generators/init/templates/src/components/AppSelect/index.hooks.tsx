@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const useAppSelect = () => {
+export const useAppSelect = () => {
   const theme = useTheme();
   const styles = useStyles(theme);
   const classes = useMemo(() => ({}), []);
@@ -25,5 +25,3 @@ const useAppSelect = () => {
     atomicStyles,
   };
 };
-
-export { useAppSelect as default };

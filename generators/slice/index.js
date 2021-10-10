@@ -47,7 +47,7 @@ module.exports = class extends Generator {
 
     this.fs.copyTpl(
       this.templatePath("index.ejs"),
-      this.destinationPath(`./src/redux-store/slices/${sliceName}/index.tsx`),
+      this.destinationPath(`./src/redux-store/slices/${sliceName}/index.ts`),
       {
         sliceName,
         pCsliceName,
@@ -62,7 +62,7 @@ module.exports = class extends Generator {
     this.fs.copyTpl(
       this.templatePath("interface.index.ejs"),
       this.destinationPath(
-        `./src/redux-store/slices/${sliceName}/interfaces/index.tsx`
+        `./src/redux-store/slices/${sliceName}/${sliceName}.interfaces.ts`
       ),
       {
         pCsliceName
@@ -76,7 +76,7 @@ module.exports = class extends Generator {
     this.fs.copyTpl(
       this.templatePath("selectors.index.ejs"),
       this.destinationPath(
-        `./src/redux-store/slices/${sliceName}/selectors/index.tsx`
+        `./src/redux-store/slices/${sliceName}/${sliceName}.selectors.ts`
       ),
       {
         sliceName,
@@ -92,7 +92,7 @@ module.exports = class extends Generator {
       this.fs.copyTpl(
         this.templatePath("sagas.index.ejs"),
         this.destinationPath(
-          `./src/redux-store/slices/${sliceName}/sagas/index.tsx`
+          `./src/redux-store/slices/${sliceName}/${sliceName}.sagas.ts`
         ),
         {
           sliceName
