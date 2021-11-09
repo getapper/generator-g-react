@@ -1,9 +1,9 @@
 import React, { memo } from "react";
-<% if (useHooks) { %>import use<%= sceneName %> from "./index.hooks";
+<% if (useHooks) { %>import { use<%= sceneName %> } from "./index.hooks";
 
 <% } %>type <%= sceneName %>Props = {}
 
-const <%= sceneName %> = ({}: <%= sceneName %>Props) => {
+export const <%= sceneName %> = memo(({}: <%= sceneName %>Props) => {
 <% if (useHooks) { %>  const {<% if (withStyles) { %>
     styles,
     classes,
@@ -13,6 +13,4 @@ const <%= sceneName %> = ({}: <%= sceneName %>Props) => {
 <% } %>  return (
     <div />
   );
-};
-
-export default memo(<%= sceneName %>);
+});

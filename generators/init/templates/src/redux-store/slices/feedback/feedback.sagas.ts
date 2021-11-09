@@ -1,7 +1,6 @@
 import { put, takeEvery, delay, take, call, race } from "redux-saga/effects";
 import { actions } from "redux-store/slices";
 import { Action } from "redux";
-import { ApiFailAction } from "redux-store/extra-actions/apis/api-builder";
 import { AlertTypes } from "components/AppAlertBox";
 
 function* closeFeedbackTask() {
@@ -40,11 +39,11 @@ export function* ajaxFailFeedbackSaga() {
         default:
           yield put(
             actions.setFeedback({
-              type: AlertTypes.error,
+              type: AlertTypes.Error,
               message: action.payload.message,
-            })
+            }),
           );
       }
-    }
+    },
   );
 }

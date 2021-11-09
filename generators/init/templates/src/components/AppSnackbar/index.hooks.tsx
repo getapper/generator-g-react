@@ -1,14 +1,10 @@
 import { useSelector } from "react-redux";
-import {
-  getFeedbackMessage,
-  getFeedbackOpen,
-  getFeedbackType,
-} from "redux-store/slices/feedback/selectors";
+import { selectors } from "redux-store";
 
 export const useAppSnackbar = () => {
-  const open = useSelector(getFeedbackOpen);
-  const type = useSelector(getFeedbackType);
-  const message = useSelector(getFeedbackMessage);
+  const open = useSelector(selectors.getFeedbackOpen);
+  const type = useSelector(selectors.getFeedbackType);
+  const message = useSelector(selectors.getFeedbackMessage);
 
   return {
     open,

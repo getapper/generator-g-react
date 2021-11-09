@@ -35,7 +35,7 @@ export const AppSelect = memo(({
   onChange,
   ...props
 }: AppSelectProps) => {
-  const { styles, classes, atomicStyles } = useAppSelect();
+  const { styles } = useAppSelect();
 
   const renderSelect = (value1, onChange1) => {
     return (

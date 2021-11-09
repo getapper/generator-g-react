@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({})
 );
 
-<% } %>const use<%= sceneName %> = () => {
+<% } %>export const use<%= sceneName %> = () => {
 <% if (withStyles) { %>  const theme = useTheme();
   const styles = useStyles(theme);
   const classes = useMemo(() => ({}), []);
@@ -21,5 +21,3 @@ const useStyles = makeStyles((theme: Theme) =>
   };
 <% } else { %>  return {};
 <% } %>};
-
-export {use<%= sceneName %> as default};

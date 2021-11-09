@@ -11,7 +11,7 @@ export const feedbackStore = createSlice({
   name: "feedback",
   initialState: {
     open: false,
-    type: AlertTypes.info,
+    type: AlertTypes.Info,
     message: "",
   } as FeedbackState,
   reducers: {
