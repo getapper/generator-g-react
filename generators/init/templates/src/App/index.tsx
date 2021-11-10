@@ -1,7 +1,7 @@
 import React, {memo} from "react";
 import { MuiThemeProvider } from "@material-ui/core";
 import { Switch, Route } from "react-router-dom";
-import AppSnackbar from "components/AppSnackbar";
+import { AppSnackbar } from "components";
 import useAppHooks from "./index.hooks";
 
 const App: React.FC = () => {
