@@ -44,7 +44,7 @@ module.exports = class extends Generator {
       },
       dependencies: {
         "@hookform/resolvers": "1.3.5",
-        "@material-ui/core": "4.11.0",
+        "@material-ui/core": "4.12.3",
         "@material-ui/icons": "4.11.2",
         "@reduxjs/toolkit": "1.4.0",
         "@types/classnames": "2.2.10",
