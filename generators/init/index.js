@@ -43,9 +43,11 @@ module.exports = class extends Generator {
         prettier: "2.0.5"
       },
       dependencies: {
+        "@emotion/react": "11.8.2",
+        "@emotion/styled": "11.8.1",
         "@hookform/resolvers": "1.3.5",
-        "@material-ui/core": "4.11.0",
-        "@material-ui/icons": "4.11.2",
+        "@mui/icons-material": "5.5.1",
+        "@mui/material": "5.5.1",
         "@reduxjs/toolkit": "1.4.0",
         "@types/classnames": "2.2.10",
         "@types/react-redux": "7.1.9",
@@ -117,6 +119,11 @@ module.exports = class extends Generator {
      */
     this.fs.copy(this.templatePath("."), this.destinationPath("."));
     this.fs.copy(this.templatePath(".*"), this.destinationRoot());
+
+    // Delete App files
+    this.fs.delete(path.join(this.destinationRoot(), "src", "App.css"));
+    this.fs.delete(path.join(this.destinationRoot(), "src", "App.tsx"));
+    this.fs.delete(path.join(this.destinationRoot(), "src", "App.test.tsx"));
   }
 
   install() {

@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { Button, ButtonProps, CircularProgress } from "@material-ui/core";
+import { Button, ButtonProps, CircularProgress } from "@mui/material";
 import { useAppButton } from "./index.hooks";
 
 type AppButtonProps = {
@@ -7,26 +7,18 @@ type AppButtonProps = {
   path?: string;
 } & ButtonProps;
 
-export const AppButton = memo(({
-  loading = false,
-  path,
-  onClick,
-  ...props
-}: AppButtonProps) => {
-  const { classes, onButtonClicked, styles } = useAppButton(
-    path,
-    onClick,
-  );
+export const AppButton = memo(
+  ({ loading = false, path, onClick, ...props }: AppButtonProps) => {
+    const { onButtonClicked } = useAppButton(path, onClick);
 
-  if (loading) {
-    return (
-      <Button {...props} onClick={onButtonClicked}>
-        <CircularProgress size={16} />
-      </Button>
-    );
-  }
+    if (loading) {
+      return (
+        <Button {...props} onClick={onButtonClicked}>
+          <CircularProgress size={16} />
+        </Button>
+      );
+    }
 
-  return (
-    <Button {...props} onClick={onButtonClicked} />
-  );
-});
+    return <Button {...props} onClick={onButtonClicked} />;
+  },
+);

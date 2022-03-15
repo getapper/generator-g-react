@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import { useAppTextField } from "./index.hooks";
-import { TextFieldProps, TextField } from "@material-ui/core";
+import { TextFieldProps, TextField } from "@mui/material";
 import { Controller } from "react-hook-form";
 
 export type AppTextFieldProps = {
@@ -16,9 +16,7 @@ export const AppTextField = memo(
     inputRef,
     ...props
   }: AppTextFieldProps) => {
-    const { InputPropsCombined } = useAppTextField({
-      InputProps,
-    });
+    const {} = useAppTextField();
 
     if (control) {
       const { name, onChange, ...otherProps } = props;
@@ -40,7 +38,6 @@ export const AppTextField = memo(
                 name={name}
                 variant="outlined"
                 {...otherProps}
-                InputProps={InputPropsCombined}
                 onChange={(ev) => onChange(ev.target.value)}
                 value={value ?? ""}
                 inputRef={(e) => {
@@ -60,7 +57,6 @@ export const AppTextField = memo(
         <TextField
           variant="outlined"
           {...props}
-          InputProps={InputPropsCombined}
           inputRef={
             inputRef
               ? inputRef

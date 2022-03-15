@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { Typography, Snackbar, SnackbarOrigin } from "@material-ui/core";
+import { Typography, Snackbar, SnackbarOrigin } from "@mui/material";
 import { AppAlertBox } from "components";
 import { useAppSnackbar } from "./index.hooks";
 
