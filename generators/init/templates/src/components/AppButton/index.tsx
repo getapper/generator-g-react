@@ -14,7 +14,12 @@ export const AppButton = memo(
     if (loading) {
       return (
         <Button {...props} onClick={onButtonClicked}>
-          <CircularProgress size={16} />
+          <CircularProgress
+            color={
+              (props.color ?? "primary") === "primary" ? "secondary" : "primary"
+            }
+            size={16}
+          />
         </Button>
       );
     }
