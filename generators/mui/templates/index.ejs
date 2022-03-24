@@ -1,11 +1,11 @@
 import React, { memo } from "react";
-import { <%= muiComponentName %>, <%= muiComponentName %>Props } from "@material-ui/core";
+import { <%= muiComponentName %>, <%= muiComponentName %>Props } from "@mui/material";
 import { use<%= componentName %> } from "./index.hooks";
 
 type <%= componentName %>Props = {} & <%= muiComponentName %>Props;
 
 export const <%= componentName %> = memo(({ ...props }: <%= componentName %>Props) => {
-  const { styles, classes, atomicStyles } = use<%= componentName %>();
+  const {} = use<%= componentName %>();
 
   return (
     <<%= muiComponentName %> {...props} />

@@ -1,16 +1,8 @@
 import { useMemo } from "react";
-import { useTheme } from "@material-ui/core";
-import { createStyles, makeStyles } from "@material-ui/core/styles";
-import { Theme } from "@material-ui/core";
-import { useAtomicStyles } from "styles";
 import { useForm } from "react-hook-form";
 import { actions, selectors } from "redux-store";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({})
-);
 
 const schema = yup.object().shape({
   // name: yup.string().required("Error message")
@@ -21,10 +13,6 @@ type <%= formName %>Data = {
 };
 
 export const use<%= formName %> = () => {
-  const theme = useTheme();
-  const styles = useStyles(theme);
-  const classes = useMemo(() => ({}), []);
-  const atomicStyles = useAtomicStyles();
   const { register, handleSubmit, errors } = useForm<<%= formName %>Data>({
     resolver: yupResolver(schema),
   });
@@ -38,9 +26,6 @@ export const use<%= formName %> = () => {
   );
 
   return {
-    styles,
-    classes,
-    atomicStyles,
     register,
     errors,
     onSubmit,

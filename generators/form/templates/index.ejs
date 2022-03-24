@@ -5,10 +5,8 @@ type <%= formName %>Props = {}
 
 export const <%= formName %> = memo(({}: <%= formName %>Props) => {
   const {
-    styles,
-    classes,
-    atomicStyles,
     register,
+    errors,
     onSubmit,
   } = use<%= formName %>();
 
