@@ -4,11 +4,7 @@ import React, { memo } from "react";
 <% } %>type <%= componentName %>Props = {}
 
 export const <%= componentName %> = memo(({}: <%= componentName %>Props) => {
-<% if (useHooks) { %>  const {<% if (withStyles) { %>
-    styles,
-    classes,
-    atomicStyles,
-  <% } %>} = use<%= componentName %>();
+<% if (useHooks) { %>  const {} = use<%= componentName %>();
 
 <% } %>  return (
     <div />

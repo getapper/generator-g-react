@@ -28,12 +28,6 @@ module.exports = class extends Generator {
         name: "useHooks",
         message: "Would you like to create a separate hook file?",
         default: true
-      },
-      {
-        type: "confirm",
-        name: "withStyles",
-        message: "Would you like to create a MUI style sheet?",
-        default: true
       }
     ]);
 
