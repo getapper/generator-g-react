@@ -4,10 +4,16 @@ import { use<%= componentName %> } from "./index.hooks";
 
 type <%= componentName %>Props = {} & <%= muiComponentName %>Props;
 
-export const <%= componentName %> = memo(({ ...props }: <%= componentName %>Props) => {
+export const <%= componentName %> = memo(({ sx, ...props }: <%= componentName %>Props) => {
   const {} = use<%= componentName %>();
 
   return (
-    <<%= muiComponentName %> {...props} />
+    <<%= muiComponentName %>
+      sx={[
+        // You cannot spread `sx` directly because `SxProps` (typeof sx) can be an array.
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
+      {...props}
+    />
   );
 });
