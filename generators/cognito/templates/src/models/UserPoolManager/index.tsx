@@ -12,7 +12,7 @@ export interface CognitoTokens {
   refreshToken: string;
 }
 
-export default class UserPoolManager {
+export class UserPoolManager {
   clientId: string;
   userPool: CognitoUserPool;
   attributesList: string[];

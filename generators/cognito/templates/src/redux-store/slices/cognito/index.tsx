@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import * as selectors from "./selectors";
+import * as selectors from "./cognito.selectors";
 import {
   CognitoAuthenticationStatus,
   CognitoAWSErrorAction,
@@ -14,8 +14,8 @@ import {
   CognitoRecoveryPasswordAction,
   CognitoResetPasswordAction,
   CognitoChangePasswordAction,
-} from "./interfaces";
-import * as sagas from "./sagas";
+} from "./cognito.interfaces";
+import * as sagas from "./cognito.sagas";
 import * as extraActions from "../../extra-actions";
 
 const initialState: CognitoState = {

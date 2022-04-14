@@ -10,7 +10,7 @@ import {
   CognitoResetPasswordAction,
   CognitoSignInAction,
   CognitoSignUpAction,
-} from "../interfaces";
+} from "./cognito.interfaces";
 import { push } from "connected-react-router";
 
 export function* cognitoManager() {
@@ -88,6 +88,7 @@ function* cognitoAppStartupSaga() {
   const accessToken = yield select(selectors.getCognitoAccessToken);
   let isLogged = false;
   if (accessToken) {
+    /*
     yield put(actions.getUsersMe.request({}));
     const resultAction = yield take([
       actions.getUsersMe.success.type,
@@ -98,6 +99,7 @@ function* cognitoAppStartupSaga() {
     } else {
       yield put(actions.clearSession());
     }
+     */
   }
   if (isLogged) {
     yield put(actions.cognitoValidSession());

@@ -38,7 +38,7 @@ module.exports = class extends Generator {
     const pkgJson = {
       dependencies: {
         "amazon-cognito-identity-js": "4.5.10",
-        "aws-amplify": "3.4.0"
+        "aws-amplify": "4.3.19"
       }
     };
     this.fs.extendJSON(this.destinationPath("package.json"), pkgJson);
@@ -56,7 +56,7 @@ export function* awsErrorFeedbackSaga() {
   yield takeEvery(actions.cognitoSetAwsError, function* (action) {
     yield put(
       actions.setFeedback({
-        type: AlertTypes.error,
+        type: AlertTypes.Error,
         message: action.payload.message,
       }),
     );
@@ -72,10 +72,29 @@ export function* awsErrorFeedbackSaga() {
         "redux-store",
         "slices",
         "feedback",
-        "sagas",
-        "index.tsx"
+        "feedback.sagas.ts"
       ),
       content
+    );
+
+    /**
+     * /src/components/index.tsx export file
+     */
+
+    const content4 = `
+export const clearSession = createAction("app/clearSession");
+`;
+
+    fs.appendFileSync(
+      path.join(
+        this.destinationRoot(),
+        "src",
+        "redux-store",
+        "extra-actions",
+        "life-cycle",
+        "index.ts"
+      ),
+      content4
     );
 
     /**
