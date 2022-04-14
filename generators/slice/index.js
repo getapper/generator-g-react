@@ -84,10 +84,7 @@ module.exports = class extends Generator {
       }
     );
 
-    /**
-     * Slice/sagas/index.tsx file
-     */
-
+    // Slice/sagas/index.tsx file
     if (useSagas) {
       this.fs.copyTpl(
         this.templatePath("sagas.index.ejs"),
@@ -99,6 +96,52 @@ module.exports = class extends Generator {
         }
       );
     }
+
+    let slicesIndex = this.fs.read(
+      this.destinationPath(`./src/redux-store/slices/index.ts`)
+    );
+
+    let match = slicesIndex.match(/import(.*?);\n\n/)[0];
+    slicesIndex = slicesIndex.replace(
+      match,
+      `${match.slice(0, -1)}import * as ${sliceName} from "./${sliceName}";
+
+`
+    );
+    match = slicesIndex.match(/(.*):(.*)Store(.*?).reducer,?\n}/)[0];
+    slicesIndex = slicesIndex.replace(
+      match,
+      `${match.slice(
+        0,
+        -1
+      )}  ${sliceName}: ${sliceName}.${sliceName}Store.reducer,
+}`
+    );
+    match = slicesIndex.match(/(.*)Store(.*?).actions,?\n}/)[0];
+    slicesIndex = slicesIndex.replace(
+      match,
+      `${match.slice(0, -1)}  ...${sliceName}.${sliceName}Store.actions,
+}`
+    );
+    match = slicesIndex.match(/(.*).selectors,?\n}/)[0];
+    slicesIndex = slicesIndex.replace(
+      match,
+      `${match.slice(0, -1)}  ...${sliceName}.selectors,
+}`
+    );
+    if (useSagas) {
+      match = slicesIndex.match(/(.*)Object.values(.*),?\n]/)[0];
+      slicesIndex = slicesIndex.replace(
+        match,
+        `${match.slice(0, -1)}  ...Object.values(${sliceName}.sagas),
+]`
+      );
+    }
+
+    this.fs.write(
+      this.destinationPath(`./src/redux-store/slices/index.ts`),
+      slicesIndex
+    );
 
     this.log(
       yosay(
