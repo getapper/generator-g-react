@@ -50,14 +50,13 @@ module.exports = class extends Generator {
         "@mui/material": "5.5.1",
         "@reduxjs/toolkit": "1.4.0",
         "@types/classnames": "2.2.10",
-        "@types/react-redux": "7.1.9",
         "@types/react-router-dom": "^5.1.5",
         axios: "0.19.2",
         classnames: "2.2.6",
-        "connected-react-router": "6.8.0",
+        "connected-react-router": "6.9.2",
         history: "4.10.1",
         "react-hook-form": "6.15.4",
-        "react-redux": "7.2.0",
+        "react-redux": "8.0.2",
         "react-router-dom": "5.2.0",
         "redux-persist": "6.0.0",
         "redux-saga": "1.1.3",
@@ -67,7 +66,8 @@ module.exports = class extends Generator {
         "start:backend:locale":
           "env-cmd -f .env.development_backend react-scripts start",
         "build:staging": "env-cmd -f .env.staging react-scripts build",
-        "build:production": "env-cmd -f .env.production react-scripts build"
+        "build:production": "env-cmd -f .env.production react-scripts build",
+        postinstall: "npx patch-package"
       },
       husky: {
         hooks: {
