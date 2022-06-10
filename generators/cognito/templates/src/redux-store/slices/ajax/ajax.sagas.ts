@@ -83,7 +83,7 @@ function* ajaxTask(
        * If this is not already a retry action after refreshing token
        * Then, try to refresh tokens and retry the ajax call
        */
-      if (status !== 401 && !retry) {
+      if (status === 401 && !retry) {
         const state = yield select();
         const refreshToken = selectors.getCognitoRefreshToken(state);
         if (refreshToken) {
@@ -113,6 +113,7 @@ function* ajaxTask(
         payload: {
           status,
           message,
+          prepareParams,
           showFeedbackOnError:
             typeof options?.showFeedbackOnError !== "undefined"
               ? options?.showFeedbackOnError

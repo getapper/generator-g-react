@@ -10,7 +10,8 @@ export interface ${apiNamePC}Params {${urlParams ? urlParams.map(p => `\n  ${p}:
 export interface ${apiNamePC}ResponseData {}
 export default apiActionBuilder<
   ${apiNamePC}Params,
-  ApiSuccessAction<${apiNamePC}ResponseData, ${apiNamePC}Params>
+  ApiSuccessAction<${apiNamePC}ResponseData, ${apiNamePC}Params>,
+  ApiFailAction<${apiNamePC}Params>
 >(
   "${apiActionRoute}",
   (
