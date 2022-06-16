@@ -3,6 +3,7 @@ module.exports = (apiNamePC, apiActionRoute, routePath, methodUC, urlParams) => 
   apiRequestPayloadBuilder,
   ApiRequestPayloadBuilderOptions,
   ApiSuccessAction,
+  ApiFailAction,
   HttpMethod
 } from '../api-builder'
 
