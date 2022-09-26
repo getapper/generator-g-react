@@ -72,6 +72,7 @@ function* ajaxTask(
         payload: {
           status,
           message,
+          prepareParams,
         },
       });
       yield put(

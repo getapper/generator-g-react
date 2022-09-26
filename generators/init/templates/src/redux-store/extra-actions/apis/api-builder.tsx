@@ -22,8 +22,10 @@ interface ApiRequestPayloadBuilderParams {
 }
 
 export interface ApiRequestPayloadBuilderOptions {
-  requestDelay?: number;
+  requestDelay: number;
   absolutePath?: boolean;
+  withCredentials?: boolean;
+  showFeedbackOnError?: boolean;
 }
 
 export interface ApiRequestPayloadType<T> {
@@ -60,18 +62,19 @@ interface ApiSuccessData<T, U> {
   prepareParams: U;
 }
 
-export interface ApiFailData {
+export interface ApiFailData<U> {
   status: number;
   message: string;
+  prepareParams: U;
 }
 
 export type ApiSuccessAction<T, U = any> = PayloadActionCreator<
   ApiSuccessData<T, U>
   >;
 
-export type ApiFailAction = PayloadActionCreator<ApiFailData>;
+export type ApiFailAction<U = any> = PayloadActionCreator<ApiFailData<U>>;
 
-export const apiActionBuilder = <ApiRequestParams, ApiResponseAction>(
+export const apiActionBuilder = <ApiRequestParams, ApiResponseAction, ApiFailedResponseAction>(
   api: string,
   prepare: PrepareAction<ApiRequestPayloadType<ApiRequestParams>>,
 ) => ({
