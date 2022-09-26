@@ -1,7 +1,7 @@
 import React, { memo } from "react";
-import { CssBaseline, Grid, ThemeProvider, Typography } from "@mui/material";
-import { Switch, Route } from "react-router-dom";
-import { AppButton, AppSnackbar } from "components";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { AppSnackbar } from "components";
 import useAppHooks from "./index.hooks";
 
 const App: React.FC = () => {
@@ -10,37 +10,11 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Switch>
-        <Route path="/">
-          <Grid container spacing={3} sx={{ p: 2 }}>
-            <Grid item xs={12}>
-              <Typography variant="h2">Buttons</Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <AppButton>Text Button</AppButton>
-            </Grid>
-            <Grid item xs={4}>
-              <AppButton variant="contained">Contained Button</AppButton>
-            </Grid>
-            <Grid item xs={4}>
-              <AppButton variant="outlined">Outlined Button</AppButton>
-            </Grid>
-            <Grid item xs={4}>
-              <AppButton color="secondary">Text Button</AppButton>
-            </Grid>
-            <Grid item xs={4}>
-              <AppButton color="secondary" variant="contained">
-                Contained Button
-              </AppButton>
-            </Grid>
-            <Grid item xs={4}>
-              <AppButton color="secondary" variant="outlined">
-                Outlined Button
-              </AppButton>
-            </Grid>
-          </Grid>
-        </Route>
-      </Switch>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<div>OK</div>} />
+        </Routes>
+      </BrowserRouter>
       <AppSnackbar />
     </ThemeProvider>
   );
