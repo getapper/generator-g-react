@@ -1,6 +1,6 @@
 {
   "name": "generator-g-react",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "description": "Official Getapper Yeoman generator for React + Redux Toolkit + Sagas + Routing + MUI + Ajax Saga projects",
   "homepage": "https://github.com/getapper/generator-g-react",
   "author": {
